@@ -1,0 +1,36 @@
+email = "popu-servers+jenkins@populate.tools "
+pipeline {
+    agent any
+    environment {
+        PATH = "/home/ubuntu/.rbenv/shims:$PATH"
+        GOBIERTO_ETL_UTILS = "/var/www/gobierto-etl-utils/current/"
+        GOBIERTO_BUDGETS_DATA_ETL = "/var/www/gobierto-etl-budgets-data/current/"
+        WORKING_DIR = "/tmp/budgets_data"
+    }
+    stages {
+        stage('Clean working dir') {
+          steps {
+              sh "rm -rf ${WORKING_DIR}"
+          }
+        }
+        stage('Extract > Dump all municipalities') {
+            steps {
+                sh "cd ${GOBIERTO_BUDGETS_DATA_ETL}; ruby operations/gobierto_budgets/dump_municipalities/run.rb > ${WORKING_DIR}/organizations.txt"
+            }
+        }
+        stage('Load > Calculate bubbles') {
+            steps {
+              sh "cd ${GOBIERTO_ETL_UTILS}; ruby operations/gobierto_budgets/bubbles/run.rb ${WORKING_DIR}/organizations.txt"
+            }
+        }
+    }
+    post {
+        failure {
+            echo 'This will run only if failed'
+            mail body: "Project: ${env.JOB_NAME} - Build Number: ${env.BUILD_NUMBER} - URL de build: ${env.BUILD_URL}",
+                charset: 'UTF-8',
+                subject: "ERROR CI: Project name -> ${env.JOB_NAME}",
+                to: email
+        }
+    }
+}
