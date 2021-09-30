@@ -1,8 +1,8 @@
 GIT
-  remote: https://github.com/PopulateTools/gobierto_data.git
-  revision: ae3bb71c5988df7947817782798630cfa7d96f01
+  remote: https://github.com/PopulateTools/gobierto_budgets_data.git
+  revision: 7db1fa4d63f08ca30d334255469144bdbc246673
   specs:
-    gobierto_data (0.1.0)
+    gobierto_budgets_data (0.1.0)
       actionpack
       activesupport
       aws-sdk-s3
@@ -106,7 +106,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  gobierto_data!
+  gobierto_budgets_data!
   ine-places
 
 BUNDLED WITH
