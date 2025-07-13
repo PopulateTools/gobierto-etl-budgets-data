@@ -4,7 +4,7 @@
 require "bundler/setup"
 Bundler.require
 
-require "ine/places"
+require "ine"
 
 INE::Places::Place.all.each do |place|
   puts place.id
